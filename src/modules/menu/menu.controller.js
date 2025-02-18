@@ -9,8 +9,9 @@ const handleCreateMenu = async (req, res, next) => {
   }
 };
 const getMenus = async (req, res, next) => {
+  const query = req.query;
   try {
-    const menu = await findMenus(req.body);
+    const menu = await findMenus(query);
     res.status(201).json(menu);
   } catch (error) {
     next(error);

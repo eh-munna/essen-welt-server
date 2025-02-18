@@ -11,7 +11,9 @@ app.use(express.json());
 app.use(cors());
 
 app.get('/', (req, res) => {
-  res.send('Hello World!');
+  res.json({
+    name: 'essen-welt-server',
+  });
 });
 
 // API for accessing

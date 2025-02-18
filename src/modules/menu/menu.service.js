@@ -5,8 +5,8 @@ const createMenu = async (payload) => {
   return result;
 };
 
-const findMenus = async () => {
-  const result = await Menu.find();
+const findMenus = async (query) => {
+  const result = await Menu.find(query);
   return result;
 };
 
