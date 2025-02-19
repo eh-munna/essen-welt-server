@@ -1,9 +1,13 @@
-import { createMenu, findMenus } from './menu.service.js';
+import { createMenu, findMenu, findMenus } from './menu.service.js';
 
 const handleCreateMenu = async (req, res, next) => {
   try {
     const menu = await createMenu(req.body);
-    res.status(201).json(menu);
+    res.status(201).json({
+      success: true,
+      message: 'Menu created successfully',
+      data: menu,
+    });
   } catch (error) {
     next(error);
   }
@@ -12,10 +16,35 @@ const getMenus = async (req, res, next) => {
   const query = req.query;
   try {
     const menu = await findMenus(query);
-    res.status(201).json(menu);
+    res.status(201).json({
+      success: true,
+
+      message: 'Menus fetched successfully',
+      data: menu,
+    });
   } catch (error) {
     next(error);
   }
 };
 
-export { getMenus, handleCreateMenu };
+const getMenu = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const menu = await findMenu(id);
+    if (!menu) {
+      return res.status(404).json({
+        success: false,
+        message: 'Menu not found',
+      });
+    }
+    res.status(200).json({
+      success: true,
+      message: 'Menu fetched successfully',
+      data: menu,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { getMenu, getMenus, handleCreateMenu };

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getMenus, handleCreateMenu } from './menu.controller.js';
+import { getMenu, getMenus, handleCreateMenu } from './menu.controller.js';
 
 const router = Router();
 
@@ -7,5 +7,7 @@ const router = Router();
 router.post('/', handleCreateMenu);
 
 router.get('/', getMenus);
+
+router.get('/:id', getMenu);
 const menuRoutes = router;
 export default menuRoutes;

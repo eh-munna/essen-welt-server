@@ -6,8 +6,14 @@ const createMenu = async (payload) => {
 };
 
 const findMenus = async (query) => {
-  const result = await Menu.find(query);
-  return result;
+  const menus = await Menu.find(query);
+  const categories = await Menu.distinct('category');
+  return { menus, categories };
 };
 
-export { createMenu, findMenus };
+const findMenu = async (id) => {
+  const menu = await Menu.findById(id);
+  return menu;
+};
+
+export { createMenu, findMenus, findMenu };
