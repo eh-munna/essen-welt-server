@@ -11,9 +11,19 @@ const findMenus = async (query) => {
   return { menus, categories };
 };
 
+const findPopularMenus = async () => {
+  const popularMenus = await Menu.find({ popular: true });
+  return popularMenus;
+};
+
 const findMenu = async (id) => {
   const menu = await Menu.findById(id);
   return menu;
 };
 
-export { createMenu, findMenus, findMenu };
+const findCartMenus = async (payload) => {
+  const cartItems = await Menu.find({ _id: { $in: payload } });
+  return cartItems;
+};
+
+export { createMenu, findCartMenus, findMenu, findMenus, findPopularMenus };

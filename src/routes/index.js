@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import bookingRoutes from '../modules/booking/booking.routes.js';
 import menuRoutes from '../modules/menu/menu.routes.js';
 
 const router = Router();
@@ -7,6 +8,10 @@ const moduleRoutes = [
   {
     path: '/menus',
     routes: menuRoutes,
+  },
+  {
+    path: '/bookings',
+    routes: bookingRoutes,
   },
 ];
 

@@ -1,4 +1,10 @@
-import { createMenu, findMenu, findMenus } from './menu.service.js';
+import {
+  createMenu,
+  findCartMenus,
+  findMenu,
+  findMenus,
+  findPopularMenus,
+} from './menu.service.js';
 
 const handleCreateMenu = async (req, res, next) => {
   try {
@@ -13,14 +19,28 @@ const handleCreateMenu = async (req, res, next) => {
   }
 };
 const getMenus = async (req, res, next) => {
-  const query = req.query;
   try {
+    const query = req.query;
     const menu = await findMenus(query);
     res.status(201).json({
       success: true,
 
       message: 'Menus fetched successfully',
       data: menu,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+const getPopularMenus = async (req, res, next) => {
+  try {
+    const popularMenus = await findPopularMenus();
+
+    res.status(200).json({
+      success: true,
+      message: 'Popular menus fetched successfully',
+      data: popularMenus,
     });
   } catch (error) {
     next(error);
@@ -47,4 +67,18 @@ const getMenu = async (req, res) => {
   }
 };
 
-export { getMenu, getMenus, handleCreateMenu };
+const getCartMenus = async (req, res, next) => {
+  try {
+    const { ids } = req.body;
+    const cartMenus = await findCartMenus(ids);
+    res.status(200).json({
+      success: true,
+      message: 'Cart menus fetched successfully',
+      data: cartMenus,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export { getCartMenus, getMenu, getMenus, getPopularMenus, handleCreateMenu };

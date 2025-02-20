@@ -14,6 +14,7 @@ const menuItemSchema = new Schema(
       required: true,
     },
     price: { type: Number, required: true, min: 0 },
+    popular: { type: Boolean, required: true, default: false },
   },
   { timestamps: true }
 );

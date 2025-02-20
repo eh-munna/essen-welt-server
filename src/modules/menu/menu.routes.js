@@ -1,5 +1,11 @@
 import { Router } from 'express';
-import { getMenu, getMenus, handleCreateMenu } from './menu.controller.js';
+import {
+  getCartMenus,
+  getMenu,
+  getMenus,
+  getPopularMenus,
+  handleCreateMenu,
+} from './menu.controller.js';
 
 const router = Router();
 
@@ -7,6 +13,9 @@ const router = Router();
 router.post('/', handleCreateMenu);
 
 router.get('/', getMenus);
+router.get('/popular', getPopularMenus);
+
+router.post('/cart', getCartMenus); // This route needs to be implemented in the booking controller.
 
 router.get('/:id', getMenu);
 const menuRoutes = router;
