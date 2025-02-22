@@ -8,7 +8,11 @@ const app = express();
 app.use(express.json());
 
 // Enable CORS for all routes in the application
-app.use(cors());
+app.use(
+  cors({
+    origin: 'http://localhost:5173', // Allow your frontend to make requests
+  })
+);
 
 app.get('/', (req, res) => {
   res.json({
