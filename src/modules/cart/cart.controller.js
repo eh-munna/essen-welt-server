@@ -1,3 +1,4 @@
+import AppError from '../../error/AppError.js';
 import { asyncTryCatch } from '../../utils/asyncTryCatch.js';
 import { createCart, findCart } from './cart.service.js';
 
@@ -12,7 +13,7 @@ const handleCreateCart = asyncTryCatch(async (req, res) => {
   });
 });
 const getCart = asyncTryCatch(async (req, res) => {
-  const cart = await findCart();
+  const cart = await findCart(req?.query);
 
   res.status(201).json({
     success: true,

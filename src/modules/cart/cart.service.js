@@ -1,3 +1,4 @@
+import AppError from '../../error/AppError.js';
 import Cart from './cart.model.js';
 
 const createCart = async (payload) => {
@@ -41,50 +42,12 @@ const createCart = async (payload) => {
   return results;
 };
 
-const findCart = async () => {
-  const cart = await Cart.find();
+const findCart = async (payload) => {
+  const cart = await Cart.find({ customer: payload?.email });
+
+  if (!cart.length) throw new AppError(404, 'No items found in the cart');
+
   return cart;
 };
 
 export { createCart, findCart };
-
-// const createCart = async (payload) => {
-//   const results = [];
-//   if (Array.isArray(payload) && payload.length > 0) {
-//     for (const item of payload) {
-//       const existingItem = await Cart.findOne({
-//         customer: item.customer,
-//         itemId: item.itemId,
-//       });
-//       if (existingItem) {
-
-//         const updatedItem = await Cart.findOneAndUpdate(
-//           { _id: existingItem?._id },
-//           { $inc: { quantity: item?.quantity } },
-//           { new: true }
-//         );
-//         results.push(updatedItem);
-//       } else {
-//         const newItem = await Cart.create(item);
-//         results.push(newItem);
-//       }
-//     }
-//   } else {
-//     const existingItem = await Cart.findOne({
-//       customer: payload?.customer,
-//       itemId: payload?.itemId,
-//     });
-//     if (existingItem) {
-//       const updatedItem = await Cart.findOneAndUpdate(
-//         { _id: existingItem?._id },
-//         { $inc: { quantity: item?.quantity } },
-//         { new: true }
-//       );
-//       results.push(updatedItem);
-//     } else {
-//       const newItem = await Cart.create(item);
-//       results.push(newItem);
-//     }
-//   }
-//   return results;
-// };
