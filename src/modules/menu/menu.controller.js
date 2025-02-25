@@ -1,3 +1,4 @@
+import { asyncTryCatch } from '../../utils/asyncTryCatch.js';
 import {
   createMenu,
   findCartMenus,
@@ -6,79 +7,65 @@ import {
   findPopularMenus,
 } from './menu.service.js';
 
-const handleCreateMenu = async (req, res, next) => {
-  try {
-    const menu = await createMenu(req.body);
-    res.status(201).json({
-      success: true,
-      message: 'Menu created successfully',
-      data: menu,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
-const getMenus = async (req, res, next) => {
-  try {
-    const query = req.query;
-    const menu = await findMenus(query);
-    res.status(201).json({
-      success: true,
+const handleCreateMenu = asyncTryCatch(async (req, res) => {
+  const menu = await createMenu(req.body);
 
-      message: 'Menus fetched successfully',
-      data: menu,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  res.status(201).json({
+    success: true,
+    message: 'Menu created successfully',
+    data: menu,
+  });
+});
 
-const getPopularMenus = async (req, res, next) => {
-  try {
-    const popularMenus = await findPopularMenus();
+const getMenus = asyncTryCatch(async (req, res) => {
+  const query = req.query;
+  const menu = await findMenus(query);
 
-    res.status(200).json({
-      success: true,
-      message: 'Popular menus fetched successfully',
-      data: popularMenus,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  res.status(201).json({
+    success: true,
+    message: 'Menus fetched successfully',
+    data: menu,
+  });
+});
 
-const getMenu = async (req, res) => {
+const getPopularMenus = asyncTryCatch(async (req, res) => {
+  const popularMenus = await findPopularMenus();
+
+  res.status(200).json({
+    success: true,
+    message: 'Popular menus fetched successfully',
+    data: popularMenus,
+  });
+});
+
+const getMenu = asyncTryCatch(async (req, res) => {
   const { id } = req.params;
-  try {
-    const menu = await findMenu(id);
-    if (!menu) {
-      return res.status(404).json({
-        success: false,
-        message: 'Menu not found',
-      });
-    }
-    res.status(200).json({
-      success: true,
-      message: 'Menu fetched successfully',
-      data: menu,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
 
-const getCartMenus = async (req, res, next) => {
-  try {
-    const { ids } = req.body;
-    const cartMenus = await findCartMenus(ids);
-    res.status(200).json({
-      success: true,
-      message: 'Cart menus fetched successfully',
-      data: cartMenus,
+  const menu = await findMenu(id);
+
+  if (!menu) {
+    return res.status(404).json({
+      success: false,
+      message: 'Menu not found',
     });
-  } catch (error) {
-    next(error);
   }
-};
+
+  res.status(200).json({
+    success: true,
+    message: 'Menu fetched successfully',
+    data: menu,
+  });
+});
+
+const getCartMenus = asyncTryCatch(async (req, res) => {
+  const { ids } = req.body;
+  const cartMenus = await findCartMenus(ids);
+
+  res.status(200).json({
+    success: true,
+    message: 'Cart menus fetched successfully',
+    data: cartMenus,
+  });
+});
 
 export { getCartMenus, getMenu, getMenus, getPopularMenus, handleCreateMenu };
