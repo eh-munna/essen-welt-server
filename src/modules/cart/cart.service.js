@@ -1,4 +1,3 @@
-import AppError from '../../error/AppError.js';
 import Cart from './cart.model.js';
 
 const createCart = async (payload) => {

@@ -1,18 +1,24 @@
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
+import config from '../src/config/index.js';
 import { globalError } from '../src/middlewares/globalError.js';
 import router from '../src/routes/index.js';
 const app = express();
 
-// Middleware for parsing JSON request bodies
-app.use(express.json());
-
 // Enable CORS for all routes in the application
-app.use(
-  cors({
-    origin: 'http://localhost:5173', // Allow your frontend to make requests
-  })
-);
+
+const corsOptions = {
+  origin: [config.corsOrigin, 'http://localhost:5174'],
+  credentials: true,
+  allowedHeaders: ['Origin', 'Content-Type', 'Authorization'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+};
+app.use(cors(corsOptions));
+
+// Middleware for parsing JSON request bodies and handling cookies
+app.use(express.json());
+app.use(cookieParser());
 
 app.get('/', (req, res) => {
   res.json({

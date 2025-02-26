@@ -15,4 +15,5 @@ export default {
   port: getRequiredEnv('PORT') || 3000,
   dbUri: getRequiredEnv('DB_URI'),
   secretKey: getRequiredEnv('SECRET_KEY'),
+  corsOrigin: getRequiredEnv('CORS_ORIGIN'),
 };
