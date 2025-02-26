@@ -15,8 +15,6 @@ export const verifyToken = async (req, res, next) => {
     // Verify the token
     const decoded = jwt.verify(token, config.secretKey);
     req.user = decoded;
-    console.log(req.user);
-
     // Proceed to the next middleware
     next();
   } catch (error) {

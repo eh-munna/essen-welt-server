@@ -8,7 +8,7 @@ const authLogin = asyncTryCatch(async (req, res) => {
     maxAge: 60 * 60 * 1000,
     httpOnly: true,
     secure: false,
-    sameSite: 'Lax',
+    sameSite: 'strict',
   };
 
   res.cookie('access_token', token, cookieOptions);
@@ -24,7 +24,7 @@ const authLogout = asyncTryCatch(async (req, res) => {
   const cookieOptions = {
     httpOnly: true,
     secure: false,
-    sameSite: 'Lax',
+    sameSite: 'strict',
   };
 
   res.clearCookie('access_token', cookieOptions);
