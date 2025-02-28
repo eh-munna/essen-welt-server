@@ -45,9 +45,17 @@ const createCart = async (payload) => {
 const findCart = async (payload) => {
   const cart = await Cart.find({ customer: payload?.email });
 
-  if (!cart.length) throw new AppError(404, 'No items found in the cart');
+  if (!cart.length) return [];
 
   return cart;
 };
 
-export { createCart, findCart };
+const findAndDeleteItem = async (itemId) => {
+  const deleteItem = await Cart.deleteOne({ itemId });
+
+  if (!deleteItem?.deletedCount)
+    throw new AppError(404, 'Item not found in the cart');
+  return deleteItem?.deletedCount;
+};
+
+export { createCart, findAndDeleteItem, findCart };

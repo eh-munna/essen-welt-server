@@ -1,5 +1,5 @@
 import { asyncTryCatch } from '../../utils/asyncTryCatch.js';
-import { createCart, findCart } from './cart.service.js';
+import { createCart, findAndDeleteItem, findCart } from './cart.service.js';
 
 const handleCreateCart = asyncTryCatch(async (req, res) => {
   const cart = await createCart(req.body);
@@ -24,11 +24,23 @@ const getCart = asyncTryCatch(async (req, res) => {
 
   const cart = await findCart(req?.query);
 
-  res.status(201).json({
+  res.status(200).json({
     success: true,
-    message: 'Cart fetch successfully',
+    message: 'Cart fetched successfully',
     data: cart,
   });
 });
 
-export { getCart, handleCreateCart };
+const deleteItem = asyncTryCatch(async (req, res) => {
+  const itemId = req?.params?.itemId;
+
+  const deletedCount = await findAndDeleteItem(itemId);
+
+  res.status(200).json({
+    success: true,
+    message: `${deletedCount} item(s) deleted from the cart`,
+    data: deletedCount || 0,
+  });
+});
+
+export { deleteItem, getCart, handleCreateCart };
