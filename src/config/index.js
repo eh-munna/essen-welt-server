@@ -16,4 +16,5 @@ export default {
   dbUri: getRequiredEnv('DB_URI'),
   secretKey: getRequiredEnv('SECRET_KEY'),
   corsOrigin: getRequiredEnv('CORS_ORIGIN'),
+  stripeSecret: getRequiredEnv('STRIPE_SECRET'),
 };

@@ -2,6 +2,7 @@ import { Router } from 'express';
 import bookingRoutes from '../modules/booking/booking.routes.js';
 import cartRoutes from '../modules/cart/cart.routes.js';
 import menuRoutes from '../modules/menu/menu.routes.js';
+import paymentRoutes from '../modules/payment/payment.routes.js';
 import userRoutes from '../modules/user/user.routes.js';
 
 const router = Router();
@@ -23,6 +24,10 @@ const moduleRoutes = [
   {
     path: '/carts',
     routes: cartRoutes,
+  },
+  {
+    path: '/payments',
+    routes: paymentRoutes,
   },
 ];
 
