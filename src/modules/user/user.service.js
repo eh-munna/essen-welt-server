@@ -10,4 +10,12 @@ const createUser = async (payload) => {
   return { user, isNew: false };
 };
 
-export { createUser };
+const findUser = async (payload) => {
+  const user = await User.findOne({ email: payload?.email });
+  if (!user) {
+    throw new AppErrorError(404, 'User not found');
+  }
+  return user;
+};
+
+export { createUser, findUser };

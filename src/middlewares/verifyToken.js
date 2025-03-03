@@ -15,7 +15,12 @@ export const verifyToken = async (req, res, next) => {
     // Verify the token
     const decoded = jwt.verify(token, config.secretKey);
     req.user = decoded;
-    // Proceed to the next middleware
+    if (!decoded?.email) {
+      res.status(401).json({
+        success: false,
+        message: 'Unauthorized',
+      });
+    }
     next();
   } catch (error) {
     return res.status(401).json({

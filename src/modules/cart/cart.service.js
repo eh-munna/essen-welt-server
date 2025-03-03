@@ -15,7 +15,15 @@ const createCart = async (payload) => {
     if (existingItem) {
       const updatedItem = await Cart.findOneAndUpdate(
         { _id: existingItem?._id },
-        { $inc: { quantity: item?.quantity ? item?.quantity : 1 } },
+        {
+          $inc: { quantity: item?.quantity ? item?.quantity : 1 },
+
+          $set: {
+            totalPrice:
+              ((existingItem?.quantity || 0) + (item?.quantity || 1)) *
+              existingItem?.price,
+          },
+        },
         { new: true }
       );
       result = {
@@ -26,7 +34,10 @@ const createCart = async (payload) => {
       };
       results.push(result);
     } else {
-      const newItem = await Cart.create(item);
+      const newItem = await Cart.create({
+        ...item,
+        totalPrice: (item?.quantity || 1) * item?.price,
+      });
       result = {
         newItem,
         message: 'New item added to the cart',
@@ -43,7 +54,7 @@ const createCart = async (payload) => {
 };
 
 const findCart = async (payload) => {
-  const cart = await Cart.find({ customer: payload?.email });
+  const cart = await Cart.find({ customer: payload?.id });
 
   if (!cart.length) return [];
 
@@ -58,4 +69,12 @@ const findAndDeleteItem = async (itemId) => {
   return deleteItem?.deletedCount;
 };
 
-export { createCart, findAndDeleteItem, findCart };
+const findAndDeleteCart = async (payload) => {
+  const deleteResult = await Cart.deleteMany({ customer: payload?.email });
+  if (deleteResult.deletedCount === 0) {
+    throw new AppError(404, 'No carts found for this customer');
+  }
+  return deleteResult?.deletedCount;
+};
+
+export { createCart, findAndDeleteCart, findAndDeleteItem, findCart };

@@ -1,5 +1,10 @@
 import { asyncTryCatch } from '../../utils/asyncTryCatch.js';
-import { createCart, findAndDeleteItem, findCart } from './cart.service.js';
+import {
+  createCart,
+  findAndDeleteCart,
+  findAndDeleteItem,
+  findCart,
+} from './cart.service.js';
 
 const handleCreateCart = asyncTryCatch(async (req, res) => {
   const cart = await createCart(req.body);
@@ -12,16 +17,6 @@ const handleCreateCart = asyncTryCatch(async (req, res) => {
   });
 });
 const getCart = asyncTryCatch(async (req, res) => {
-  const user = req?.user;
-
-  if (!user || !user?.email) {
-    throw new AppError(401, 'Unauthorized'); // User not authenticated or invalid token. Return 401 Unauthorized.
-  }
-
-  if (!req?.query?.email || req?.query?.email !== user?.email) {
-    throw new AppError(403, 'Invalid email'); // Return 400 Bad Request if email is missing in query parameters.
-  }
-
   const cart = await findCart(req?.query);
 
   res.status(200).json({
@@ -43,4 +38,13 @@ const deleteItem = asyncTryCatch(async (req, res) => {
   });
 });
 
-export { deleteItem, getCart, handleCreateCart };
+const deleteCart = asyncTryCatch(async (req, res) => {
+  const deletedCount = await findAndDeleteCart(req?.query);
+  res.status(200).json({
+    success: true,
+    message: `Cart deleted successfully. ${deletedCount} item(s) deleted`,
+    data: deletedCount || 0,
+  });
+});
+
+export { deleteCart, deleteItem, getCart, handleCreateCart };

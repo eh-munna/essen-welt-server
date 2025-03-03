@@ -10,6 +10,7 @@ const addressSchema = new Schema({
 const userSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  uid: { type: String, required: true },
   password: { type: String },
   role: { type: String, enum: ['admin', 'customer'], required: true },
   phoneNumber: { type: String, required: true },

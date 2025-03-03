@@ -1,14 +1,20 @@
 import { Router } from 'express';
-import { verifyToken } from '../../middlewares/verifyToken.js';
-import { deleteItem, getCart, handleCreateCart } from './cart.controller.js';
+import {
+  deleteCart,
+  deleteItem,
+  getCart,
+  handleCreateCart,
+} from './cart.controller.js';
 
 const router = Router();
 
 router.post('/', handleCreateCart);
 
-router.get('/', verifyToken, getCart);
+router.get('/', getCart);
 
-router.delete('/:itemId', deleteItem)
+router.delete('/:itemId', deleteItem);
+
+router.delete('/', deleteCart);
 
 const cartRoutes = router;
 

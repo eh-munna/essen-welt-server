@@ -3,6 +3,8 @@ import config from '../../config/index.js';
 
 const stripe = new Stripe(config.stripeSecret);
 
+// Create a payment intent in Stripe
+
 const paymentIntent = async (payload = []) => {
   let totalAmount = payload?.reduce(
     (total, item) => total + (item?.price || 0) * (item?.quantity || 1),
@@ -23,6 +25,21 @@ const paymentIntent = async (payload = []) => {
     },
   });
 
-  return paymentIntent.client_secret;
+  return {
+    clientSecret: paymentIntent?.client_secret,
+    paymentIntentId: paymentIntent?.id,
+    amount: paymentIntent?.amount,
+  };
 };
-export { paymentIntent };
+
+// Retrieve a payment intent from Stripe
+
+const retrievePaymentIntent = async (payload) => {
+  const paymentIntent = await stripe.paymentIntents.retrieve(payload);
+  return {
+    clientSecret: paymentIntent?.client_secret,
+    paymentIntentId: paymentIntent?.id,
+    amount: paymentIntent?.amount,
+  };
+};
+export { paymentIntent, retrievePaymentIntent };
