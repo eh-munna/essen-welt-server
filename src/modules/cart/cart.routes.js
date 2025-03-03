@@ -1,4 +1,6 @@
 import { Router } from 'express';
+import { validateUserEmail } from '../../middlewares/validateUserEmail.js';
+import { verifyToken } from '../../middlewares/verifyToken.js';
 import {
   deleteCart,
   deleteItem,
@@ -10,7 +12,7 @@ const router = Router();
 
 router.post('/', handleCreateCart);
 
-router.get('/', getCart);
+router.get('/', verifyToken, validateUserEmail, getCart);
 
 router.delete('/:itemId', deleteItem);
 

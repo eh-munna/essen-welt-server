@@ -2,8 +2,6 @@ import AppError from '../error/AppError.js';
 
 export const validateUserEmail = async (req, res, next) => {
   const user = req?.user;
-  console.log(user?.email, req?.query?.email);
-  console.log(user?.email === req?.query?.email);
 
   // User not authenticated or invalid token. Return 401 Unauthorized
   if (!user || !user?.email) {

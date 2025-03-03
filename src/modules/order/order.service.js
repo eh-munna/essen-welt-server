@@ -37,7 +37,7 @@ const findOrders = async (payload) => {
     .populate({
       path: 'customer',
       match: { email: payload?.email },
-      select: 'email',
+      select: 'email name',
     })
 
     .populate({
