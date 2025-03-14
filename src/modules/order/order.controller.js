@@ -11,7 +11,7 @@ const handleCreateOrder = asyncTryCatch(async (req, res) => {
 });
 
 const getOrders = asyncTryCatch(async (req, res) => {
-  const orders = await findOrders(req.query);
+  const orders = await findOrders(req?.user);
   res.status(200).json({
     success: true,
     message: 'Orders fetched successfully',

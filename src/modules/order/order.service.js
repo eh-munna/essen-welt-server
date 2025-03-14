@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import Cart from '../cart/cart.model.js';
+import User from '../user/user.model.js';
 import Order from './order.model.js';
 
 const createOrder = async (payload) => {
@@ -33,22 +34,33 @@ const createOrder = async (payload) => {
 };
 
 const findOrders = async (payload) => {
-  const orders = await Order.find()
-    .populate({
-      path: 'customer',
-      match: { email: payload?.email },
-      select: 'email name',
-    })
+  const user = await User.isExists(payload?.email);
+  const isAdmin = user?.role === 'admin';
 
+  let query = Order.find()
     .populate({
       path: 'items',
       populate: {
         path: 'itemId',
-        // match: { _id: payload?.itemId },
         select: 'name',
       },
     })
     .lean();
+
+  if (!isAdmin) {
+    query = query.populate({
+      path: 'customer',
+      match: { email: payload?.email },
+      select: 'email name',
+    });
+  } else {
+    query = query.populate({
+      path: 'customer',
+      select: 'email name',
+    });
+  }
+
+  const orders = await query;
 
   const transformedOrders = orders?.map((order) => {
     order.items = order.items.map((item) => ({
