@@ -24,23 +24,36 @@ const bookingSchema = new Schema({
   },
 
   date: {
-    type: String,
+    type: Date,
     required: true,
   },
 
   startTime: {
-    type: String,
+    type: Date,
     required: true,
   },
 
   endTime: {
-    type: String,
+    type: Date,
     required: true,
   },
 
   message: {
     type: String,
   },
+
+  tableId: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: 'Table',
+      required: true,
+    },
+  ],
+  tableNumber: [
+    {
+      type: Number,
+    },
+  ],
 });
 
 const Booking = model('Booking', bookingSchema);

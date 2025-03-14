@@ -1,10 +1,9 @@
 import { Schema, model } from 'mongoose';
 
 const tableSchema = new Schema({
-  status: {
-    type: String,
-    enum: ['booked', 'available'],
-  },
+  tableNumber: { type: Number, required: true, unique: true },
+  capacity: { type: Number, required: true },
+  isAvailable: { type: Boolean, default: true },
 });
 
 const Table = model('Table', tableSchema);
