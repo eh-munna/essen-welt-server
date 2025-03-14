@@ -16,7 +16,7 @@ export const verifyToken = async (req, res, next) => {
     const decoded = jwt.verify(token, config.secretKey);
     req.user = decoded;
     if (!decoded?.email) {
-      res.status(401).json({
+      return res.status(401).json({
         success: false,
         message: 'Unauthorized',
       });
