@@ -15,7 +15,7 @@ router.post('/', handleCreateMenu);
 router.get('/', getMenus);
 router.get('/popular', getPopularMenus);
 
-router.post('/cart', getCartMenus); // This route needs to be implemented in the booking controller.
+router.post('/cart', getCartMenus);
 
 router.get('/:id', getMenu);
 const menuRoutes = router;

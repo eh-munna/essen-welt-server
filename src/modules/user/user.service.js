@@ -11,7 +11,7 @@ const createUser = async (payload) => {
   return { user, isNew: false };
 };
 
-const findUser = async (payload) => {
+const findCustomer = async (payload) => {
   const user = await User.findOne({ email: payload?.email });
   if (!user) {
     throw new AppError(404, 'User not found');
@@ -19,4 +19,12 @@ const findUser = async (payload) => {
   return user;
 };
 
-export { createUser, findUser };
+const findUsers = async () => {
+  const users = await User.find({ role: 'customer' });
+  if (!users) {
+    throw new AppError(404, 'No users found');
+  }
+  return users;
+};
+
+export { createUser, findCustomer, findUsers };
