@@ -1,3 +1,4 @@
+import AppError from '../../error/AppError.js';
 import Booking from '../booking/booking.model.js';
 import Table from './table.model.js';
 
@@ -102,4 +103,40 @@ const findAvailableTable = async (numberOfPeople, startTime, endTime) => {
   return mergedTables ? mergedTables : null;
 };
 
-export { createTable, findAvailableTable };
+const findTables = async () => {
+  const tables = await Table.find({});
+  return tables?.length > 0 ? tables : [];
+};
+
+const findAndDeleteTable = async (payload) => {
+  console.log(payload);
+  const deleteResult = await Table.deleteOne({ _id: payload });
+
+  if (!deleteResult?.deletedCount) {
+    throw new AppError(404, 'Table not found');
+  }
+
+  return deleteResult?.deletedCount;
+};
+
+const findAndUpdateTable = async (payload) => {
+  const updateResult = await Table.findByIdAndUpdate(
+    payload?.id,
+    payload?.updates,
+    { new: true }
+  );
+
+  if (!updateResult) {
+    throw new AppError(404, 'Table not found');
+  }
+
+  return updateResult;
+};
+
+export {
+  createTable,
+  findAndDeleteTable,
+  findAndUpdateTable,
+  findAvailableTable,
+  findTables,
+};

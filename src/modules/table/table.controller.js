@@ -1,7 +1,12 @@
 // * book a table
 
 import { asyncTryCatch } from '../../utils/asyncTryCatch.js';
-import { createTable } from './table.service.js';
+import {
+  createTable,
+  findAndDeleteTable,
+  findAndUpdateTable,
+  findTables,
+} from './table.service.js';
 
 const handleCreateTable = asyncTryCatch(async (req, res) => {
   const table = await createTable(req.body);
@@ -12,6 +17,35 @@ const handleCreateTable = asyncTryCatch(async (req, res) => {
   });
 });
 
-const bookTable = asyncTryCatch(async (req, res) => {});
+const getTables = asyncTryCatch(async (req, res) => {
+  const tables = await findTables();
+  res.status(200).json({
+    success: true,
+    message: 'Tables fetched successfully',
+    data: tables,
+  });
+});
 
-export { bookTable, handleCreateTable };
+const deleteTable = asyncTryCatch(async (req, res) => {
+  const { id } = req.params;
+  const deletedCount = await findAndDeleteTable(id);
+
+  res.status(200).json({
+    success: true,
+    message: `${deletedCount} table(s) deleted successfully`,
+  });
+});
+
+const updateTable = asyncTryCatch(async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+  const updatedTable = await findAndUpdateTable({ id, updates });
+
+  res.status(200).json({
+    success: true,
+    message: 'Table updated successfully',
+    data: updatedTable,
+  });
+});
+
+export { deleteTable, getTables, handleCreateTable, updateTable };

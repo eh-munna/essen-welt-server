@@ -45,8 +45,6 @@ const createBooking = async (payload) => {
       );
     }
 
-    console.log(tables);
-
     const booking = await Booking.create(
       [
         {
