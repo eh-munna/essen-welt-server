@@ -27,4 +27,12 @@ const findUsers = async () => {
   return users;
 };
 
-export { createUser, findCustomer, findUsers };
+const findAndDeleteUser = async (payload) => {
+  const deleteResult = await User.findByIdAndDelete(payload?.id);
+  if (!deleteResult?.deletedCount) {
+    throw new AppError(404, 'User not found');
+  }
+  return deleteResult?.deletedCount;
+};
+
+export { createUser, findAndDeleteUser, findCustomer, findUsers };

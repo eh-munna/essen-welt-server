@@ -1,5 +1,10 @@
 import { asyncTryCatch } from '../../utils/asyncTryCatch.js';
-import { createOrder, findOrders } from './order.service.js';
+import {
+  createOrder,
+  findAndUpdate,
+  findOrder,
+  findOrders,
+} from './order.service.js';
 
 const handleCreateOrder = asyncTryCatch(async (req, res) => {
   const order = await createOrder(req.body);
@@ -19,4 +24,33 @@ const getOrders = asyncTryCatch(async (req, res) => {
   });
 });
 
-export { getOrders, handleCreateOrder };
+const getOrder = asyncTryCatch(async (req, res) => {
+  const order = await findOrder(req.params);
+  res.status(200).json({
+    success: true,
+    message: 'Order fetched successfully',
+    data: order,
+  });
+});
+
+const updateOrder = asyncTryCatch(async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+  const updatedOrder = await findAndUpdate({ id, updates });
+  res.status(200).json({
+    success: true,
+    message: 'Order updated successfully',
+    data: updatedOrder,
+  });
+});
+
+const deleteOrder = asyncTryCatch(async (req, res) => {
+  const deleteCount = await findAndDelete(req.params);
+
+  res.status(200).json({
+    success: true,
+    message: `Order deleted successfully. Deleted count: ${deleteCount}`,
+  });
+});
+
+export { deleteOrder, getOrder, getOrders, handleCreateOrder, updateOrder };

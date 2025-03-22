@@ -73,4 +73,48 @@ const findOrders = async (payload) => {
   return transformedOrders;
 };
 
-export { createOrder, findOrders };
+const findOrder = async (payload) => {
+  const customer = await User.isExists(payload?.email);
+
+  const orders = await Order.find({ customer: customer?._id })
+    .populate({
+      path: 'items',
+      populate: {
+        path: 'itemId',
+        select: 'name',
+      },
+    })
+    .lean();
+
+  const transformedOrders = orders?.map((order) => {
+    order.items = order.items.map((item) => ({
+      name: item.itemId?.name,
+      quantity: item.quantity,
+      priceAtOrder: item.priceAtOrder,
+    }));
+    return order;
+  });
+  return transformedOrders;
+};
+
+const findAndUpdate = async (payload) => {
+  const updateResult = await Order.findByIdAndUpdate(
+    payload?.id,
+    payload?.updates,
+    { new: true }
+  );
+  if (!updateResult) {
+    throw new AppError(404, 'Order not found');
+  }
+  return updateResult;
+};
+
+const findAndDelete = async (payload) => {
+  const deleteResult = await Order.findByIdAndDelete(payload?.id);
+  if (!deleteResult) {
+    throw new AppError(404, 'Order not found');
+  }
+  return deleteResult;
+};
+
+export { createOrder, findAndDelete, findAndUpdate, findOrder, findOrders };

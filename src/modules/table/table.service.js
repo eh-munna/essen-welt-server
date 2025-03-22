@@ -109,7 +109,6 @@ const findTables = async () => {
 };
 
 const findAndDeleteTable = async (payload) => {
-  console.log(payload);
   const deleteResult = await Table.deleteOne({ _id: payload });
 
   if (!deleteResult?.deletedCount) {
