@@ -16,6 +16,7 @@ const handleCreateOrder = asyncTryCatch(async (req, res) => {
 });
 
 const getOrders = asyncTryCatch(async (req, res) => {
+  console.log(req?.url);
   const orders = await findOrders(req?.user);
   res.status(200).json({
     success: true,

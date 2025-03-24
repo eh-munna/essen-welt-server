@@ -35,6 +35,7 @@ const createOrder = async (payload) => {
 
 const findOrders = async (payload) => {
   const user = await User.isExists(payload?.email);
+
   const isAdmin = user?.role === 'admin';
 
   let query = Order.find()

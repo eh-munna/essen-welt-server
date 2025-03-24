@@ -1,5 +1,10 @@
 import { asyncTryCatch } from '../../utils/asyncTryCatch.js';
-import { createBooking } from './booking.service.js';
+import {
+  createBooking,
+  findAndUpdateBooking,
+  findBookings,
+  findCustomerBookings,
+} from './booking.service.js';
 
 const handleCreateBooking = asyncTryCatch(async (req, res) => {
   const booking = await createBooking(req.body);
@@ -10,4 +15,33 @@ const handleCreateBooking = asyncTryCatch(async (req, res) => {
   });
 });
 
-export { handleCreateBooking };
+const getBookings = asyncTryCatch(async (req, res) => {
+  const bookings = await findBookings(req?.query);
+  res.status(200).json({
+    success: true,
+    message: 'Bookings fetched successfully',
+    data: bookings,
+  });
+});
+
+const getCustomerBookings = asyncTryCatch(async (req, res) => {
+  const bookings = await findCustomerBookings(req?.params);
+  res.status(200).json({
+    success: true,
+    message: 'Customer bookings fetched successfully',
+    data: bookings,
+  });
+});
+
+const updateBooking = asyncTryCatch(async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+  const updatedBooking = await findAndUpdateBooking({ id, updates });
+  res.status(200).json({
+    success: true,
+    message: 'Booking updated successfully',
+    data: updatedBooking,
+  });
+});
+
+export { getBookings, getCustomerBookings, handleCreateBooking, updateBooking };
