@@ -2,6 +2,7 @@ import { asyncTryCatch } from '../../utils/asyncTryCatch.js';
 import {
   createUser,
   findAndDeleteUser,
+  findAndUpdateUser,
   findCustomer,
   findUsers,
 } from './user.service.js';
@@ -46,4 +47,15 @@ const deleteUser = asyncTryCatch(async (req, res) => {
   });
 });
 
-export { deleteUser, getCustomer, getUsers, handleCreateUser };
+const updateUser = asyncTryCatch(async (req, res) => {
+  const { id } = req.params;
+  const updates = req.body;
+  const updatedUser = await findAndUpdateUser({ id, updates });
+  res.status(200).json({
+    success: true,
+    message: 'User updated successfully',
+    data: updatedUser,
+  });
+});
+
+export { deleteUser, getCustomer, getUsers, handleCreateUser, updateUser };

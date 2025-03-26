@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import AppError from '../../error/AppError.js';
 import { handleBookingData } from '../../utils/bookingUtils.js';
 import { findAvailableTable } from '../table/table.service.js';
+import User from '../user/user.model.js';
 import Booking from './booking.model.js';
 
 const createBooking = async (payload) => {
@@ -118,20 +119,56 @@ const findAndUpdateBooking = async (payload) => {
     }
     throw error;
   }
+};
 
-  // const updates = {
-  //   ...payload?.updates,
-  // }
+const findAndDeleteBooking = async (payload) => {
+  let filter;
+  const { id, user, guest } = payload;
 
-  // const booking = await Booking.findByIdAndUpdate(
-  //   payload?.id,
-  //   payload?.updates,
-  //   { new: true }
-  // );
+  console.log(id);
+
+  const existingUser = await User.isExists(user?.email);
+
+  if (existingUser?.role === 'admin') {
+    filter = { _id: id };
+  } else if (existingUser?.role === 'customer') {
+    filter = { _id: id, email: user?.email };
+  } else if (guest?.email) {
+    filter = { _id: id, email: guest?.email };
+  }
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
+  try {
+    const booking = await Booking.findOne(filter).session(session);
+
+    if (!booking) {
+      throw new AppError(403, 'You are not authorized to perform this action.');
+    }
+
+    const deletedBooking = await Booking.findByIdAndDelete(id, { session });
+
+    console.log(deletedBooking?.deletedCount);
+
+    if (!deletedBooking) {
+      throw new AppError(404, 'Booking not found');
+    }
+    await session.commitTransaction();
+    session.endSession();
+    return 1;
+  } catch (error) {
+    if (session) {
+      await session.abortTransaction();
+      session.endSession();
+    }
+    throw error;
+  }
 };
 
 export {
   createBooking,
+  findAndDeleteBooking,
   findAndUpdateBooking,
   findBookings,
   findCustomerBookings,

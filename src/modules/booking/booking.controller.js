@@ -1,6 +1,7 @@
 import { asyncTryCatch } from '../../utils/asyncTryCatch.js';
 import {
   createBooking,
+  findAndDeleteBooking,
   findAndUpdateBooking,
   findBookings,
   findCustomerBookings,
@@ -44,4 +45,24 @@ const updateBooking = asyncTryCatch(async (req, res) => {
   });
 });
 
-export { getBookings, getCustomerBookings, handleCreateBooking, updateBooking };
+const deleteBooking = asyncTryCatch(async (req, res) => {
+  const { id } = req.params;
+
+  const deletedCount = await findAndDeleteBooking({
+    id,
+    user: req?.user,
+    guest: req?.body,
+  });
+  res.status(200).json({
+    success: true,
+    message: `${deletedCount} booking(s) deleted successfully`,
+  });
+});
+
+export {
+  deleteBooking,
+  getBookings,
+  getCustomerBookings,
+  handleCreateBooking,
+  updateBooking,
+};

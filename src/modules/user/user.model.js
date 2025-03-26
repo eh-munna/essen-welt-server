@@ -15,6 +15,11 @@ const userSchema = new Schema({
   role: { type: String, enum: ['admin', 'customer'], required: true },
   phoneNumber: { type: String, required: true },
   deliveryAddress: addressSchema,
+  isActive: {
+    type: String,
+    enum: ['active', 'blocked'],
+    default: 'active',
+  },
 });
 
 userSchema.statics.isExists = async function (email) {

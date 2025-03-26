@@ -62,6 +62,7 @@ const findCart = async (payload) => {
 };
 
 const findAndDeleteItem = async (itemId) => {
+  console.log(itemId);
   const deleteItem = await Cart.deleteOne({ itemId });
 
   if (!deleteItem?.deletedCount)
@@ -70,7 +71,7 @@ const findAndDeleteItem = async (itemId) => {
 };
 
 const findAndDeleteCart = async (payload) => {
-  const deleteResult = await Cart.deleteMany({ customer: payload?.email });
+  const deleteResult = await Cart.deleteMany({ customer: payload?.id });
   if (deleteResult.deletedCount === 0) {
     throw new AppError(404, 'No carts found for this customer');
   }

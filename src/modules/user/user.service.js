@@ -29,10 +29,28 @@ const findUsers = async () => {
 
 const findAndDeleteUser = async (payload) => {
   const deleteResult = await User.findByIdAndDelete(payload?.id);
-  if (!deleteResult?.deletedCount) {
+  if (!deleteResult) {
     throw new AppError(404, 'User not found');
   }
-  return deleteResult?.deletedCount;
+  return 1;
 };
 
-export { createUser, findAndDeleteUser, findCustomer, findUsers };
+const findAndUpdateUser = async (payload) => {
+  const updateResult = await User.findByIdAndUpdate(
+    payload?.id,
+    payload?.updates,
+    { new: true }
+  );
+  if (!updateResult) {
+    throw new AppError(404, 'User not found');
+  }
+  return updateResult;
+};
+
+export {
+  createUser,
+  findAndDeleteUser,
+  findAndUpdateUser,
+  findCustomer,
+  findUsers,
+};

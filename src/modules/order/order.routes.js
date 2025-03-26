@@ -4,7 +4,6 @@ import { verifyToken } from '../../middlewares/verifyToken.js';
 import { verifyUser } from '../../middlewares/verifyUser.js';
 import {
   deleteOrder,
-  getOrder,
   getOrders,
   handleCreateOrder,
   updateOrder,
@@ -15,7 +14,6 @@ const router = Router();
 router.post('/', handleCreateOrder);
 router.get('/', verifyToken, verifyUser, getOrders);
 router.get('/admin', verifyToken, verifyAdmin, getOrders);
-router.get('/admin/:email', verifyToken, verifyAdmin, getOrder);
 
 router.put('/admin/:id', verifyToken, verifyAdmin, updateOrder);
 

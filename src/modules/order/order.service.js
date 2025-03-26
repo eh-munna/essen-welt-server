@@ -1,10 +1,10 @@
 import mongoose from 'mongoose';
+import AppError from '../../error/AppError.js';
 import Cart from '../cart/cart.model.js';
 import User from '../user/user.model.js';
 import Order from './order.model.js';
 
 const createOrder = async (payload) => {
-  // return payload;
   const isOrderExists = await Order.isDuplicateOrder(payload?.paymentIntentId);
   if (isOrderExists)
     throw new AppError(409, 'Order with this payment intent ID already exists');
@@ -34,67 +34,50 @@ const createOrder = async (payload) => {
 };
 
 const findOrders = async (payload) => {
-  const user = await User.isExists(payload?.email);
+  let orders = [];
 
-  const isAdmin = user?.role === 'admin';
-
-  let query = Order.find()
-    .populate({
-      path: 'items',
-      populate: {
-        path: 'itemId',
-        select: 'name',
-      },
-    })
-    .lean();
-
-  if (!isAdmin) {
-    query = query.populate({
-      path: 'customer',
-      match: { email: payload?.email },
-      select: 'email name',
-    });
+  if (!payload?.email) {
+    orders = await Order.find()
+      .populate({
+        path: 'items',
+        populate: {
+          path: 'itemId',
+          select: 'name',
+        },
+      })
+      .populate({
+        path: 'customer',
+        select: 'email name',
+      })
+      .lean();
   } else {
-    query = query.populate({
-      path: 'customer',
-      select: 'email name',
-    });
+    const customer = await User.isExists(payload?.email);
+
+    orders = await Order.find({ customer: customer?._id })
+      .populate({
+        path: 'items',
+        populate: {
+          path: 'itemId',
+          select: 'name',
+        },
+      })
+      .populate({
+        path: 'customer',
+        select: 'email name',
+      })
+      .lean();
   }
 
-  const orders = await query;
-
-  const transformedOrders = orders?.map((order) => {
-    order.items = order.items.map((item) => ({
+  const transformedOrders = orders.map((order) => ({
+    ...order,
+    items: order.items.map((item) => ({
+      itemId: item.itemId?._id,
       name: item.itemId?.name,
       quantity: item.quantity,
       priceAtOrder: item.priceAtOrder,
-    }));
-    return order;
-  });
-  return transformedOrders;
-};
+    })),
+  }));
 
-const findOrder = async (payload) => {
-  const customer = await User.isExists(payload?.email);
-
-  const orders = await Order.find({ customer: customer?._id })
-    .populate({
-      path: 'items',
-      populate: {
-        path: 'itemId',
-        select: 'name',
-      },
-    })
-    .lean();
-
-  const transformedOrders = orders?.map((order) => {
-    order.items = order.items.map((item) => ({
-      name: item.itemId?.name,
-      quantity: item.quantity,
-      priceAtOrder: item.priceAtOrder,
-    }));
-    return order;
-  });
   return transformedOrders;
 };
 
@@ -110,12 +93,12 @@ const findAndUpdate = async (payload) => {
   return updateResult;
 };
 
-const findAndDelete = async (payload) => {
-  const deleteResult = await Order.findByIdAndDelete(payload?.id);
+const findAndDeleteOrder = async (payload) => {
+  const deleteResult = await Order.findByIdAndDelete(payload);
   if (!deleteResult) {
     throw new AppError(404, 'Order not found');
   }
-  return deleteResult;
+  return 1;
 };
 
-export { createOrder, findAndDelete, findAndUpdate, findOrder, findOrders };
+export { createOrder, findAndDeleteOrder, findAndUpdate, findOrders };
