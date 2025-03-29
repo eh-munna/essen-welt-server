@@ -54,14 +54,47 @@ const createBooking = async (payload) => {
   }
 };
 
-const findBookings = async (payload) => {
-  const filter = payload?.email ? payload.email : {};
-  const bookings = await Booking.find(filter);
-  return bookings;
-};
+// const findBookings = async (payload) => {
+//   const { email, bookingCode } = payload;
 
-const findCustomerBookings = async (payload) => {
-  const bookings = await Booking.find({ email: payload?.email });
+//   if (!email || !bookingCode) {
+//     throw new AppError(400, 'Email and booking code are required');
+//   }
+
+//   let filter;
+//   let bookings;
+
+//   const existingUser = await User.findOne({ email: payload?.email });
+
+//   console.log(existingUser);
+//   if (existingUser?.role === 'customer') {
+//     filter = { email: email };
+//   } else {
+//     filter = { email: email, bookingCode: bookingCode };
+//   }
+
+//   const existingBooking = await Booking.findOne({
+//     email: email,
+//     bookingCode: bookingCode,
+//   });
+
+//   if (existingBooking) {
+//     bookings = await Booking.find(filter);
+//   }
+
+//   bookings = await Booking.find(filter);
+
+//   return bookings;
+// };
+
+const findBookings = async (payload) => {
+  let bookings = [];
+
+  if (!payload?.email) {
+    bookings = await Booking.find();
+  } else {
+    bookings = await Booking.find({ email: payload?.email });
+  }
 
   if (!bookings?.length) return [];
   return bookings;
@@ -80,9 +113,6 @@ const findAndUpdateBooking = async (payload) => {
       updates?.endTime,
       updates?.numberOfPeople
     );
-
-    console.log(numberOfPeople);
-
     const tables = await findAvailableTable(numberOfPeople, startTime, endTime);
 
     if (!tables || tables.length === 0) {
@@ -124,8 +154,6 @@ const findAndUpdateBooking = async (payload) => {
 const findAndDeleteBooking = async (payload) => {
   let filter;
   const { id, user, guest } = payload;
-
-  console.log(id);
 
   const existingUser = await User.isExists(user?.email);
 
@@ -171,5 +199,4 @@ export {
   findAndDeleteBooking,
   findAndUpdateBooking,
   findBookings,
-  findCustomerBookings,
 };

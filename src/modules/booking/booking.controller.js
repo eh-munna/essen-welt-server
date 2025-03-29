@@ -4,7 +4,6 @@ import {
   findAndDeleteBooking,
   findAndUpdateBooking,
   findBookings,
-  findCustomerBookings,
 } from './booking.service.js';
 
 const handleCreateBooking = asyncTryCatch(async (req, res) => {
@@ -16,20 +15,21 @@ const handleCreateBooking = asyncTryCatch(async (req, res) => {
   });
 });
 
+// const getBookings = asyncTryCatch(async (req, res) => {
+//   const bookings = await findBookings(req.query);
+
+//   res.status(200).json({
+//     success: true,
+//     message: 'Bookings fetched successfully',
+//     data: bookings,
+//   });
+// });
+
 const getBookings = asyncTryCatch(async (req, res) => {
-  const bookings = await findBookings(req?.query);
+  const bookings = await findBookings(req.query);
   res.status(200).json({
     success: true,
     message: 'Bookings fetched successfully',
-    data: bookings,
-  });
-});
-
-const getCustomerBookings = asyncTryCatch(async (req, res) => {
-  const bookings = await findCustomerBookings(req?.params);
-  res.status(200).json({
-    success: true,
-    message: 'Customer bookings fetched successfully',
     data: bookings,
   });
 });
@@ -59,10 +59,4 @@ const deleteBooking = asyncTryCatch(async (req, res) => {
   });
 });
 
-export {
-  deleteBooking,
-  getBookings,
-  getCustomerBookings,
-  handleCreateBooking,
-  updateBooking,
-};
+export { deleteBooking, getBookings, handleCreateBooking, updateBooking };

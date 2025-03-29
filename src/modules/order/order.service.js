@@ -47,7 +47,7 @@ const findOrders = async (payload) => {
       })
       .populate({
         path: 'customer',
-        select: 'email name',
+        select: 'email firstName lastName',
       })
       .lean();
   } else {
@@ -63,7 +63,7 @@ const findOrders = async (payload) => {
       })
       .populate({
         path: 'customer',
-        select: 'email name',
+        select: 'email firstName lastName',
       })
       .lean();
   }

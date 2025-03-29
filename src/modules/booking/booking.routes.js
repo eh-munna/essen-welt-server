@@ -1,10 +1,11 @@
 import { Router } from 'express';
 import { verifyAdmin } from '../../middlewares/verifyAdmin.js';
 import { verifyToken } from '../../middlewares/verifyToken.js';
+
+import { verifyUser } from '../../middlewares/verifyUser.js';
 import {
   deleteBooking,
   getBookings,
-  getCustomerBookings,
   handleCreateBooking,
   updateBooking,
 } from './booking.controller.js';
@@ -13,13 +14,17 @@ const router = Router();
 
 router.post('/', handleCreateBooking);
 
-router.get('/', verifyToken, getBookings);
+router.get('/', getBookings);
 
-router.get('/admin/:email', verifyToken, verifyAdmin, getCustomerBookings);
+router.get('/admin', verifyToken, verifyAdmin, getBookings);
 
 router.put('/admin/:id', verifyToken, verifyAdmin, updateBooking);
 
-router.delete('/:id', deleteBooking);
+router.put('/:id', verifyToken, verifyUser, updateBooking);
+
+router.delete('/admin/:id', verifyToken, verifyAdmin, deleteBooking);
+
+router.delete('/:id', verifyToken, verifyUser, deleteBooking);
 
 const bookingRoutes = router;
 
