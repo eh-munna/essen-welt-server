@@ -9,10 +9,14 @@ const app = express();
 // Enable CORS for all routes in the application
 
 const corsOptions = {
-  origin: [config.corsOrigin, 'http://localhost:5174'],
+  origin: [
+    config.corsOrigin,
+    'http://localhost:5174',
+    'https://essen-welt.vercel.app',
+  ],
   credentials: true,
   allowedHeaders: ['Origin', 'Content-Type', 'Authorization'],
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
 };
 app.use(cors(corsOptions));
 
