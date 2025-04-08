@@ -1,3 +1,4 @@
+import config from '../../config/index.js';
 import { asyncTryCatch } from '../../utils/asyncTryCatch.js';
 import { generateAuth } from './auth.service.js';
 
@@ -7,8 +8,8 @@ const authLogin = asyncTryCatch(async (req, res) => {
   const cookieOptions = {
     maxAge: 60 * 60 * 1000,
     httpOnly: true,
-    secure: true,
-    sameSite: 'none',
+    secure: config.nodeEnv === 'production' ? true : false,
+    sameSite: config.nodeEnv === 'production' ? 'none' : 'strict',
   };
 
   res.cookie('access_token', token, cookieOptions);
@@ -23,8 +24,8 @@ const authLogin = asyncTryCatch(async (req, res) => {
 const authLogout = asyncTryCatch(async (req, res) => {
   const cookieOptions = {
     httpOnly: true,
-    secure: true,
-    sameSite: 'none',
+    secure: config.nodeEnv === 'production' ? true : false,
+    sameSite: config.nodeEnv === 'production' ? 'none' : 'strict',
   };
 
   res.clearCookie('access_token', cookieOptions);
