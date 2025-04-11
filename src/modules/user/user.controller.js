@@ -13,8 +13,8 @@ const handleCreateUser = asyncTryCatch(async (req, res) => {
   res.status(200).json({
     success: true,
     message: isNew
-      ? 'User created successfully'
-      : 'User already exists. Logging in...',
+      ? 'Account created successfully'
+      : 'Welcome to Essen Welt...',
     data: user,
   });
 });

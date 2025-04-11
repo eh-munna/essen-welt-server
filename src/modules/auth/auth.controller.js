@@ -7,7 +7,7 @@ const authLogin = asyncTryCatch(async (req, res) => {
 
   const cookieOptions = {
     maxAge: 60 * 60 * 1000,
-    httpOnly: true,
+    httpOnly: config.nodeEnv === 'production' ? true : false,
     secure: config.nodeEnv === 'production' ? true : false,
     sameSite: config.nodeEnv === 'production' ? 'none' : 'strict',
   };
@@ -23,7 +23,7 @@ const authLogin = asyncTryCatch(async (req, res) => {
 
 const authLogout = asyncTryCatch(async (req, res) => {
   const cookieOptions = {
-    httpOnly: true,
+    httpOnly: config.nodeEnv === 'production' ? true : false,
     secure: config.nodeEnv === 'production' ? true : false,
     sameSite: config.nodeEnv === 'production' ? 'none' : 'strict',
   };
