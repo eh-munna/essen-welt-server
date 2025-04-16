@@ -2,7 +2,6 @@ import { asyncTryCatch } from '../../utils/asyncTryCatch.js';
 import { paymentIntent, retrievePaymentIntent } from './payment.service.js';
 
 const handlePaymentIntent = asyncTryCatch(async (req, res) => {
-  console.log(req.body);
   const result = await paymentIntent(req.body);
   res.status(200).json({
     success: true,

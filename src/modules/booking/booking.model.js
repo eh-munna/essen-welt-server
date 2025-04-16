@@ -9,7 +9,6 @@ const bookingSchema = new Schema({
   email: {
     type: String,
     required: true,
-    unique: true,
   },
 
   phoneNumber: {

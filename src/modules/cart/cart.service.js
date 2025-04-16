@@ -62,7 +62,6 @@ const findCart = async (payload) => {
 };
 
 const findAndDeleteItem = async (itemId) => {
-  console.log(itemId);
   const deleteItem = await Cart.deleteOne({ itemId });
 
   if (!deleteItem?.deletedCount)

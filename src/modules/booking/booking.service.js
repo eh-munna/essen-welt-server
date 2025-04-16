@@ -54,39 +54,6 @@ const createBooking = async (payload) => {
   }
 };
 
-// const findBookings = async (payload) => {
-//   const { email, bookingCode } = payload;
-
-//   if (!email || !bookingCode) {
-//     throw new AppError(400, 'Email and booking code are required');
-//   }
-
-//   let filter;
-//   let bookings;
-
-//   const existingUser = await User.findOne({ email: payload?.email });
-
-//   console.log(existingUser);
-//   if (existingUser?.role === 'customer') {
-//     filter = { email: email };
-//   } else {
-//     filter = { email: email, bookingCode: bookingCode };
-//   }
-
-//   const existingBooking = await Booking.findOne({
-//     email: email,
-//     bookingCode: bookingCode,
-//   });
-
-//   if (existingBooking) {
-//     bookings = await Booking.find(filter);
-//   }
-
-//   bookings = await Booking.find(filter);
-
-//   return bookings;
-// };
-
 const findBookings = async (payload) => {
   let bookings = [];
 
@@ -176,8 +143,6 @@ const findAndDeleteBooking = async (payload) => {
     }
 
     const deletedBooking = await Booking.findByIdAndDelete(id, { session });
-
-    console.log(deletedBooking?.deletedCount);
 
     if (!deletedBooking) {
       throw new AppError(404, 'Booking not found');

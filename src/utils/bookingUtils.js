@@ -7,6 +7,20 @@ export const handleBookingData = (date, startTime, endTime, numberOfPeople) => {
 
   const today = new Date().toISOString().split('T')[0];
   const bookingDate = new Date(date).toISOString().split('T')[0];
+  const now = new Date();
+
+  const utcDate = new Date(now.toISOString());
+
+  const localISO = new Date(
+    utcDate.getTime() - utcDate.getTimezoneOffset() * 60000
+  );
+
+  startTime = convertToDayDate(date, startTime);
+  endTime = convertToDayDate(date, endTime);
+  numberOfPeople = Number(numberOfPeople);
+
+  const openingTime = convertToDayDate(date, open);
+  const closingTime = convertToDayDate(date, close);
 
   if (bookingDate < today) {
     throw new AppError(
@@ -15,12 +29,12 @@ export const handleBookingData = (date, startTime, endTime, numberOfPeople) => {
     );
   }
 
-  startTime = convertToDayDate(date, startTime);
-  endTime = convertToDayDate(date, endTime);
-  numberOfPeople = Number(numberOfPeople);
-
-  const openingTime = convertToDayDate(date, open);
-  const closingTime = convertToDayDate(date, close);
+  if (startTime < localISO || endTime < localISO) {
+    throw new AppError(
+      400,
+      `Invalid booking time. Booking cannot be in the past.`
+    );
+  }
 
   if (startTime < openingTime || endTime > closingTime) {
     throw new AppError(

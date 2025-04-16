@@ -71,8 +71,8 @@ const findOrders = async (payload) => {
   const transformedOrders = orders.map((order) => ({
     ...order,
     items: order.items.map((item) => ({
-      itemId: item.itemId?._id,
-      name: item.itemId?.name,
+      itemId: item?.itemId,
+      itemName: item?.itemName,
       quantity: item.quantity,
       priceAtOrder: item.priceAtOrder,
     })),
