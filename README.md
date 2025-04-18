@@ -173,6 +173,9 @@ Follow the steps below to get the project running locally:
 
 ```bash
 git clone https://github.com/eh-munna/essen-welt-server
+```
+
+```bash
 cd essen-welt-server
 ```
 
